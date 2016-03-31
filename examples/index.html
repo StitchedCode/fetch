@@ -6,7 +6,15 @@
 </head>
 <body>
   <script>
-    var result = fetch('https://api.github.com')
+    var p = new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve()
+      }, 100)
+    })
+
+    var result = fetch('https://api.github.com', {
+      timeout: p
+    })
 
     result.then(function(response) {
       console.log('response', response)
