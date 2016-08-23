@@ -2,10 +2,14 @@
   'use strict';
 
   // Removed to override browser's fetch
-  
+
   // if (self.fetch) {
   //   return
   // }
+
+  function newTypeError(type = null) {
+    return new TypeError(type)
+  }
 
   var support = {
     iterable: 'Symbol' in self && 'iterator' in Symbol,
@@ -26,7 +30,7 @@
       name = String(name)
     }
     if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
-      throw new TypeError('Invalid character in header field name')
+      throw newTypeError('INVALID_HEADER_KEY')
     }
     return name.toLowerCase()
   }
@@ -156,7 +160,7 @@
 
   function consumed(body) {
     if (body.bodyUsed) {
-      return Promise.reject(new TypeError('Already read'))
+      return Promise.reject(newTypeError('BODY_ALREADY_READ'))
     }
     body.bodyUsed = true
   }
@@ -280,7 +284,7 @@
     var body = options.body
     if (Request.prototype.isPrototypeOf(input)) {
       if (input.bodyUsed) {
-        throw new TypeError('Already read')
+        throw newTypeError('BODY_ALREADY_READ')
       }
       this.url = input.url
       this.credentials = input.credentials
@@ -307,7 +311,7 @@
     this.timeout = options.timeout || null
 
     if ((this.method === 'GET' || this.method === 'HEAD') && body) {
-      throw new TypeError('Body not allowed for GET or HEAD requests')
+      throw newTypeError('NO_BODY_ON_GET_OR_HEAD')
     }
     this._initBody(body)
   }
@@ -424,11 +428,11 @@
       }
 
       xhr.onerror = function() {
-        reject(new TypeError('Network request failed'))
+        reject(newTypeError('NETWORK_REQUEST_FAILED'))
       }
 
       xhr.onabort = function() {
-        reject(new TypeError('Network request aborted'))
+        reject(newTypeError('NETWORK_REQUEST_ABORTED'))
       }
 
       xhr.open(request.method, request.url, true)
