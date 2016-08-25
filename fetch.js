@@ -7,7 +7,7 @@
   //   return
   // }
 
-  function newTypeError(type = null) {
+  function newTypeError(type) {
     return new TypeError(type)
   }
 
